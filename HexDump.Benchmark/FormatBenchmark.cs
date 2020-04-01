@@ -54,12 +54,12 @@ namespace HexDump.Benchmark
         {
             HexDump.ParseDic(_dump);
         }
-
+/** too slow to continue measures
         [Benchmark]
         public void ParseRegex()
         {
             HexDump.ParseRegex(_dump);
         }
-
+**/
     }
 }

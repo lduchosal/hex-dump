@@ -3,7 +3,7 @@ using Xunit;
 
 namespace HexDump.Tests
 {
-    public class HexDump_Format_Test
+    public class HexDumpFormatTest
     {
 
         [Fact]
@@ -185,6 +185,31 @@ namespace HexDump.Tests
 0040    FF FF FF FF FF FF FF FF  FF FF FF FF FF FF FF FF    ÿÿÿÿÿÿÿÿ ÿÿÿÿÿÿÿÿ
 0050    FF FF FF FF FF FF FF FF  FF FF FF FF FF FF FF FF    ÿÿÿÿÿÿÿÿ ÿÿÿÿÿÿÿÿ
 0060    FF FF FF FF                                         ÿÿÿÿ             ".TrimStart();
+            
+            var result = HexDump.Format(data);
+            var parsed = HexDump.Parse(result);
+            var result2 = HexDump.Format(parsed);
+
+            Assert.Equal(expected, result);
+            Assert.Equal(expected, result2);
+        }
+
+        
+        [Fact]
+        public void When_Encode_128_9a_Then_ok()
+        {
+            var data = Enumerable.Repeat((byte) 0x9a, 128).ToArray();
+
+            var expected = @"
+0000    9A 9A 9A 9A 9A 9A 9A 9A  9A 9A 9A 9A 9A 9A 9A 9A    ........ ........
+0010    9A 9A 9A 9A 9A 9A 9A 9A  9A 9A 9A 9A 9A 9A 9A 9A    ........ ........
+0020    9A 9A 9A 9A 9A 9A 9A 9A  9A 9A 9A 9A 9A 9A 9A 9A    ........ ........
+0030    9A 9A 9A 9A 9A 9A 9A 9A  9A 9A 9A 9A 9A 9A 9A 9A    ........ ........
+0040    9A 9A 9A 9A 9A 9A 9A 9A  9A 9A 9A 9A 9A 9A 9A 9A    ........ ........
+0050    9A 9A 9A 9A 9A 9A 9A 9A  9A 9A 9A 9A 9A 9A 9A 9A    ........ ........
+0060    9A 9A 9A 9A 9A 9A 9A 9A  9A 9A 9A 9A 9A 9A 9A 9A    ........ ........
+0070    9A 9A 9A 9A 9A 9A 9A 9A  9A 9A 9A 9A 9A 9A 9A 9A    ........ ........
+".Trim();
             
             var result = HexDump.Format(data);
             var parsed = HexDump.Parse(result);

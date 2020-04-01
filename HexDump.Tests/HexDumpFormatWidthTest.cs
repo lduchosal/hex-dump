@@ -3,7 +3,7 @@ using Xunit;
 
 namespace HexDump.Tests
 {
-    public class HexDump_Format_Width_Test
+    public class HexDumpFormatWidthTest
     {
 
 
