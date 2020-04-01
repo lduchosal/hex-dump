@@ -3,13 +3,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 
 namespace HexDump
 {
     public  static partial class HexDump
     {
-        private static readonly int[] _lookup = new int[]
+        private static readonly byte[] _lookup2 = new byte[]
         {
             0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,  0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
             0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,  0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -25,14 +26,16 @@ namespace HexDump
         /// </summary>
         /// <param name="dump"></param>
         /// <returns></returns>
-        public static byte[] ParseLookup(string dump)
+        public static byte[] Parse(string dump)
         {
 
             
             //00000000   01 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00   ................
             //00000000   01 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00   ................
 
-            var result = new List<byte>();
+            var lb = new List<int>();
+            var hb = new List<int>();
+            var intermediate = new List<(byte, byte)>();
             var span = dump.AsSpan();
             for (int i = 0; i < span.Length - 3; i++)
             {
@@ -47,16 +50,37 @@ namespace HexDump
                     )
                     )
                 {
-                    int dec = (
-                        _lookup[span[i + 1]] * 10 
-                        + _lookup[span[i + 2]] 
-                        ) * 16 / 10;
-                    
-                    result.Add((byte)dec);
+                    lb.Add(_lookup2[span[i + 1]]);
+                    hb.Add(_lookup2[span[i + 2]]);
                 }
             }
 
-            return result.ToArray();
+            var ints = Simd(lb.ToArray(), hb.ToArray());
+            var result = new byte[ints.Length];
+            for (int i = 0; i < ints.Length; i++)
+            {
+                result[i] = (byte) ints[i];
+            }
+
+            return result;
+        }
+
+        public static int[] Simd(int[] lb, int[] hb)
+        {
+            var simdLength = Vector<int>.Count;
+            var result = new int[lb.Length];
+            var tens = new Vector<int>(10);
+            var hexs = new Vector<int>(16);
+
+            var i = 0;
+            for (i = 0; i <= lb.Length - simdLength; i += simdLength) {
+                
+                var vl = new Vector<int>(lb, i);
+                var vh = new Vector<int>(hb, i);
+                ((vl * tens + vh) * hexs / tens ).CopyTo(result, i);
+            }
+
+            return result;
         }
 
     }

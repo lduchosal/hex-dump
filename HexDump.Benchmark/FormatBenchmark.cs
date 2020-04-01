@@ -31,6 +31,11 @@ namespace HexDump.Benchmark
             HexDump.Parse(_dump);
         }
         [Benchmark]
+        public void ParseLookup()
+        {
+            HexDump.ParseLookup(_dump);
+        }
+        [Benchmark]
         public void ParseDic()
         {
             HexDump.ParseDic(_dump);
