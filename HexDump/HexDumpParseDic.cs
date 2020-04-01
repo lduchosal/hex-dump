@@ -52,7 +52,7 @@ namespace HexDump
                     )
                 {
 
-                    int dec = (_dic[span[i + 1]] * 10 + _dic[span[i + 2]]) * 16 / 10;
+                    int dec = (_dic[span[i + 1]] * 16 + _dic[span[i + 2]]);
                     result.Add((byte)dec);
                 }
             }

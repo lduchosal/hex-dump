@@ -26,24 +26,33 @@ namespace HexDump.Benchmark
         }
 
         [Benchmark]
-        public void Parse()
+        public void ParseSimd()
         {
-            HexDump.Parse(_dump);
+            HexDump.ParseSimd(_dump);
         }
+        
         [Benchmark]
-        public void ParseLookup()
+        public void ParseLookup1()
         {
-            HexDump.ParseLookup(_dump);
+            HexDump.ParseLookup1(_dump);
         }
+        
         [Benchmark]
-        public void ParseDic()
+        public void ParseLookup2()
         {
-            HexDump.ParseDic(_dump);
+            HexDump.ParseLookup2(_dump);
         }
+        
         [Benchmark]
         public void ParseConvert()
         {
             HexDump.ParseConvert(_dump);
+        }
+
+        [Benchmark]
+        public void ParseDic()
+        {
+            HexDump.ParseDic(_dump);
         }
 
         [Benchmark]

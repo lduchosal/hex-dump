@@ -10,7 +10,7 @@ namespace HexDump
 {
     public  static partial class HexDump
     {
-        private static readonly byte[] _lookup2 = new byte[]
+        private static readonly byte[] _lookupSimd = new byte[]
         {
             0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,  0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
             0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,  0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -26,7 +26,7 @@ namespace HexDump
         /// </summary>
         /// <param name="dump"></param>
         /// <returns></returns>
-        public static byte[] Parse(string dump)
+        public static byte[] ParseSimd(string dump)
         {
 
             
@@ -35,7 +35,6 @@ namespace HexDump
 
             var lb = new List<int>();
             var hb = new List<int>();
-            var intermediate = new List<(byte, byte)>();
             var span = dump.AsSpan();
             for (int i = 0; i < span.Length - 3; i++)
             {
@@ -50,8 +49,8 @@ namespace HexDump
                     )
                     )
                 {
-                    lb.Add(_lookup2[span[i + 1]]);
-                    hb.Add(_lookup2[span[i + 2]]);
+                    lb.Add(_lookupSimd[span[i + 1]]);
+                    hb.Add(_lookupSimd[span[i + 2]]);
                 }
             }
 
@@ -67,9 +66,9 @@ namespace HexDump
 
         public static int[] Simd(int[] lb, int[] hb)
         {
+            
             var simdLength = Vector<int>.Count;
             var result = new int[lb.Length];
-            var tens = new Vector<int>(10);
             var hexs = new Vector<int>(16);
 
             var i = 0;
@@ -77,7 +76,7 @@ namespace HexDump
                 
                 var vl = new Vector<int>(lb, i);
                 var vh = new Vector<int>(hb, i);
-                ((vl * tens + vh) * hexs / tens ).CopyTo(result, i);
+                (vl * hexs + vh).CopyTo(result, i);
             }
 
             return result;

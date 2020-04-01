@@ -171,6 +171,28 @@ namespace HexDump.Tests
             Assert.Equal(expected, result2);
             Assert.Equal(expected, result);
         }
+        
+        [Fact]
+        public void When_Encode_100_ff_Then_ok()
+        {
+            var data = Enumerable.Repeat((byte) 0xff, 100).ToArray();
+
+            var expected = @"
+0000    FF FF FF FF FF FF FF FF  FF FF FF FF FF FF FF FF    ÿÿÿÿÿÿÿÿ ÿÿÿÿÿÿÿÿ
+0010    FF FF FF FF FF FF FF FF  FF FF FF FF FF FF FF FF    ÿÿÿÿÿÿÿÿ ÿÿÿÿÿÿÿÿ
+0020    FF FF FF FF FF FF FF FF  FF FF FF FF FF FF FF FF    ÿÿÿÿÿÿÿÿ ÿÿÿÿÿÿÿÿ
+0030    FF FF FF FF FF FF FF FF  FF FF FF FF FF FF FF FF    ÿÿÿÿÿÿÿÿ ÿÿÿÿÿÿÿÿ
+0040    FF FF FF FF FF FF FF FF  FF FF FF FF FF FF FF FF    ÿÿÿÿÿÿÿÿ ÿÿÿÿÿÿÿÿ
+0050    FF FF FF FF FF FF FF FF  FF FF FF FF FF FF FF FF    ÿÿÿÿÿÿÿÿ ÿÿÿÿÿÿÿÿ
+0060    FF FF FF FF                                         ÿÿÿÿ             ".TrimStart();
+            
+            var result = HexDump.Format(data);
+            var parsed = HexDump.Parse(result);
+            var result2 = HexDump.Format(parsed);
+
+            Assert.Equal(expected, result);
+            Assert.Equal(expected, result2);
+        }
 
         [Fact]
         public void When_Encode_40_61_Then_ok()
