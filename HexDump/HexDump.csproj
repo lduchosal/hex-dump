@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;net45</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <DebugType>portable</DebugType>
     <LangVersion>8</LangVersion>
@@ -21,5 +21,9 @@
     <IncludeSource>true</IncludeSource>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Memory" Version="4.5.4" />
+  </ItemGroup>
 
 </Project>

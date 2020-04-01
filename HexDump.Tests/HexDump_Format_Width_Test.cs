@@ -27,7 +27,7 @@ namespace HexDump.Tests
 ".Trim();
             
             var result = HexDump.Format(data, width, columns, offset, ascii);
-            var parsed = HexDump.Parse(result, width, columns, offset, ascii);
+            var parsed = HexDump.ParseRegex(result, width, columns, offset, ascii);
             var result2 = HexDump.Format(parsed, width, columns, offset, ascii);
 
             Assert.Equal(expected, result);
@@ -55,7 +55,7 @@ namespace HexDump.Tests
 ".Trim();
             
             var result = HexDump.Format(data, width, columns, offset, ascii);
-            var parsed = HexDump.Parse(result, width, columns, offset, ascii);
+            var parsed = HexDump.ParseRegex(result, width, columns, offset, ascii);
             var result2 = HexDump.Format(parsed, width, columns, offset, ascii);
 
             Assert.Equal(expected, result);
@@ -82,7 +82,7 @@ namespace HexDump.Tests
 ".Trim();
             
             var result = HexDump.Format(data, width, columns, offset, ascii);
-            var parsed = HexDump.Parse(result, width, columns, offset, ascii);
+            var parsed = HexDump.ParseRegex(result, width, columns, offset, ascii);
             var result2 = HexDump.Format(parsed, width, columns, offset, ascii);
 
             Assert.Equal(expected, result);
@@ -110,7 +110,7 @@ namespace HexDump.Tests
 ".Trim();
             
             var result = HexDump.Format(data, width, columns, offset, ascii);
-            var parsed = HexDump.Parse(result, width, columns, offset, ascii);
+            var parsed = HexDump.ParseRegex(result, width, columns, offset, ascii);
             var result2 = HexDump.Format(parsed, width, columns, offset, ascii);
 
             Assert.Equal(expected, result);
@@ -133,7 +133,7 @@ namespace HexDump.Tests
 0030    61 61 61 61 61 61 61 61                             aaaaaaaa         ".TrimStart();
             
             var result = HexDump.Format(data, width, columns, offset, ascii);
-            var parsed = HexDump.Parse(result, width, columns, offset, ascii);
+            var parsed = HexDump.ParseRegex(result, width, columns, offset, ascii);
             var result2 = HexDump.Format(parsed, width, columns, offset, ascii);
 
             Assert.Equal(expected, result);
@@ -157,7 +157,7 @@ namespace HexDump.Tests
 61 61 61 61 61 61 61 61                             aaaaaaaa         ".TrimStart();
             
             var result = HexDump.Format(data, width, columns, offset, ascii);
-            var parsed = HexDump.Parse(result, width, columns, offset, ascii);
+            var parsed = HexDump.ParseRegex(result, width, columns, offset, ascii);
             var result2 = HexDump.Format(parsed, width, columns, offset, ascii);
 
             Assert.Equal(expected, result);
@@ -180,7 +180,7 @@ namespace HexDump.Tests
 0030    61 61 61 61 61 61 61 61                         ".TrimStart();
             
             var result = HexDump.Format(data, width, columns, offset, ascii);
-            var parsed = HexDump.Parse(result, width, columns, offset, ascii);
+            var parsed = HexDump.ParseRegex(result, width, columns, offset, ascii);
             var result2 = HexDump.Format(parsed, width, columns, offset, ascii);
 
             Assert.Equal(expected, result);
@@ -204,7 +204,7 @@ namespace HexDump.Tests
 61 61 61 61 61 61 61 61                         ".TrimStart();
             
             var result = HexDump.Format(data, width, columns, offset, ascii);
-            var parsed = HexDump.Parse(result, width, columns, offset, ascii);
+            var parsed = HexDump.ParseRegex(result, width, columns, offset, ascii);
             var result2 = HexDump.Format(parsed, width, columns, offset, ascii);
 
             Assert.Equal(expected, result);
@@ -227,7 +227,7 @@ namespace HexDump.Tests
 0030    61 61 61 61 61 61 61 61                                                      aaaaaaaa                  ".TrimStart();
             
             var result = HexDump.Format(data, width, columns, offset, ascii);
-            var parsed = HexDump.Parse(result, width, columns, offset, ascii);
+            var parsed = HexDump.ParseRegex(result, width, columns, offset, ascii);
             var result2 = HexDump.Format(parsed, width, columns, offset, ascii);
 
             Assert.Equal(expected, result);
@@ -250,7 +250,7 @@ namespace HexDump.Tests
 61 61 61 61 61 61 61 61                                                      aaaaaaaa                  ".TrimStart();
             
             var result = HexDump.Format(data, width, columns, offset, ascii);
-            var parsed = HexDump.Parse(result, width, columns, offset, ascii);
+            var parsed = HexDump.ParseRegex(result, width, columns, offset, ascii);
             var result2 = HexDump.Format(parsed, width, columns, offset, ascii);
 
             Assert.Equal(expected, result);
@@ -273,7 +273,7 @@ namespace HexDump.Tests
 0030    61 61 61 61 61 61 61 61                                                  ".TrimStart();
             
             var result = HexDump.Format(data, width, columns, offset, ascii);
-            var parsed = HexDump.Parse(result, width, columns, offset, ascii);
+            var parsed = HexDump.ParseRegex(result, width, columns, offset, ascii);
             var result2 = HexDump.Format(parsed, width, columns, offset, ascii);
 
             Assert.Equal(expected, result);
@@ -296,7 +296,7 @@ namespace HexDump.Tests
 61 61 61 61 61 61 61 61                                                  ".TrimStart();
             
             var result = HexDump.Format(data, width, columns, offset, ascii);
-            var parsed = HexDump.Parse(result, width, columns, offset, ascii);
+            var parsed = HexDump.ParseRegex(result, width, columns, offset, ascii);
             var result2 = HexDump.Format(parsed, width, columns, offset, ascii);
 
             Assert.Equal(expected, result);

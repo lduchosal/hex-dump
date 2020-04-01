@@ -21,15 +21,20 @@ namespace HexDump
         /// <param name="includeOffset"></param>
         /// <param name="includeAscii"></param>
         /// <returns></returns>
-        public static byte[] Parse(string dump, int columnWidth = 8, int columnCount = 2, bool includeOffset = true, bool includeAscii = true)
+        public static byte[] ParseRegex(string dump, int columnWidth = 8, int columnCount = 2, bool includeOffset = true, bool includeAscii = true, bool compileRegex = true)
         {
 
             string rio = includeOffset ? "((?<offset>[0-9a-f]+)\\s+)" : "";
             string ria = includeAscii ? "(?<dump>.+)" : "";
+
+            var options = RegexOptions.IgnoreCase;
+            options = compileRegex 
+                ? options | RegexOptions.Compiled 
+                : options;
             
             int hexaWidth = (columnWidth * 3 * columnCount) + columnCount - 1 - 1;
             var _re = new Regex($"^{rio}(?<hexa>[0-9a-f\\s]{{{hexaWidth}}}){ria}$",
-                RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                options);
 
             //00000000   01 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00   ................
             //00000000   01 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00   ................
