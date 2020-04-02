@@ -79,13 +79,31 @@ namespace HexDump
         public static byte[] ParseLookup2(string dump)
         {
 
-            //00000000   01 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00   ................
-            //00000000   01 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00   ................
+            //0000   01 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00   ................
+            //0000   01 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00   ................
+            //0000    9A 20 31 32 20 9A 9A 9A  9A 9A 9A 9A 9A 9A 9A 9A    . 12 ... ........
 
             var result = new List<byte>();
             var span = dump.AsSpan();
-            for (int i = 0; i < span.Length - 3; i++)
+            var len = span.Length;
+            bool ascii = false;
+            for (int i = 0; i < len - 3; i++)
             {
+                if (
+                    i == 0 
+                    && _sep[span[i+2]] == 0xFF
+                    && _lookup1[span[i + 1]] != 0xff
+                    && _lookup2[span[i + 2]] != 0xff
+                )
+                {
+                    byte dec = (byte)(
+                        _lookup1[span[i + 0]]
+                        + _lookup2[span[i + 1]] 
+                    );
+                    
+                    result.Add(dec);
+                }
+
                 
                 // First char without offset (i==0)
                 if (
@@ -105,9 +123,9 @@ namespace HexDump
 
 
                 // last char without ascii (i + 3 ==length)
-                if (
+                else if (
                     _sep[span[i+1]] == 0xFF
-                    && i + 4 == span.Length
+                    && i + 4 == len
                     && _lookup1[span[i + 2]] != 0xff
                     && _lookup2[span[i + 3]] != 0xff
                 )
@@ -121,7 +139,7 @@ namespace HexDump
                 }
 
 
-                if (
+                else if (
                     _sep[span[i]] == 0xFF
                     && _sep[span[i+3]] == 0xFF
                     && _lookup1[span[i + 1]] != 0xff

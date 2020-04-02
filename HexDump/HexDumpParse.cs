@@ -12,7 +12,7 @@ namespace HexDump
 
         public static byte[] Parse(string dump)
         {
-            return ParseLookup2(dump);
+            return ParseStasteMachine(dump);
         }
 
     }

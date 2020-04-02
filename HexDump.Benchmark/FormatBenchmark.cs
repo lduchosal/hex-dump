@@ -11,7 +11,8 @@ namespace HexDump.Benchmark
     //[SimpleJob(RuntimeMoniker.CoreRt30)]
     //[SimpleJob(RuntimeMoniker.Mono)]
     [RPlotExporter]
-
+    [MemoryDiagnoser]
+    [ShortRunJob] 
     public class FormatBenchmark
     {
         private string _dump;
@@ -42,7 +43,13 @@ namespace HexDump.Benchmark
         {
             HexDump.ParseLookup2(_dump);
         }
-        
+
+        [Benchmark]
+        public void ParseStasteMachine()
+        {
+            HexDump.ParseStasteMachine(_dump);
+        }
+
         [Benchmark]
         public void ParseConvert()
         {
