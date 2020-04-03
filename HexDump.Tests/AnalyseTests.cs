@@ -4,7 +4,7 @@ using Xunit;
 
 namespace HexDump.Tests
 {
-    public class AnalyseTest
+    public class AnalyseTests
     {
 
         
@@ -22,7 +22,7 @@ namespace HexDump.Tests
             Assert.Equal(8, config.Offset);
             Assert.Equal(48, config.Hex);
             Assert.Equal(21, config.Ascii);
-            Assert.Equal(1, config.Eol);
+            Assert.Equal(1, config.NewLine);
         }
         
         [Fact]
@@ -38,7 +38,7 @@ namespace HexDump.Tests
             Assert.Equal(0, config.Offset);
             Assert.Equal(48, config.Hex);
             Assert.Equal(0, config.Ascii);
-            Assert.Equal(1, config.Eol);
+            Assert.Equal(1, config.NewLine);
         }
 
 
@@ -54,7 +54,7 @@ namespace HexDump.Tests
             Assert.Equal(0, config.Offset);
             Assert.Equal(48, config.Hex);
             Assert.Equal(0, config.Ascii);
-            Assert.Equal(1, config.Eol);
+            Assert.Equal(1, config.NewLine);
         }
 
         [Fact]
@@ -69,7 +69,7 @@ namespace HexDump.Tests
             Assert.Equal(0, config.Offset);
             Assert.Equal(23, config.Hex);
             Assert.Equal(0, config.Ascii);
-            Assert.Equal(1, config.Eol);
+            Assert.Equal(1, config.NewLine);
         }
 
 
@@ -88,7 +88,7 @@ namespace HexDump.Tests
             Assert.Equal(0, config.Offset);
             Assert.Equal(48, config.Hex);
             Assert.Equal(21, config.Ascii);
-            Assert.Equal(1, config.Eol);
+            Assert.Equal(1, config.NewLine);
         }
         
         [Fact]
@@ -103,7 +103,7 @@ namespace HexDump.Tests
             Assert.Equal(0, config.Offset);
             Assert.Equal(48, config.Hex);
             Assert.Equal(21, config.Ascii);
-            Assert.Equal(1, config.Eol);
+            Assert.Equal(1, config.NewLine);
         }
         
         [Fact]
@@ -118,7 +118,7 @@ namespace HexDump.Tests
             Assert.Equal(0, config.Offset);
             Assert.Equal(2, config.Hex);
             Assert.Equal(0, config.Ascii);
-            Assert.Equal(1, config.Eol);
+            Assert.Equal(1, config.NewLine);
         }
         
         [Fact]
@@ -133,7 +133,7 @@ namespace HexDump.Tests
             Assert.Equal(0, config.Offset);
             Assert.Equal(5, config.Hex);
             Assert.Equal(0, config.Ascii);
-            Assert.Equal(1, config.Eol);
+            Assert.Equal(1, config.NewLine);
         }
         
         
@@ -156,9 +156,32 @@ namespace HexDump.Tests
             Assert.Equal(8, config.Offset);
             Assert.Equal(23, config.Hex);
             Assert.Equal(0, config.Ascii);
-            Assert.Equal(1, config.Eol);
+            Assert.Equal(1, config.NewLine);
         }
 
 
+        [Fact]
+        public void When_56a_Columns1_Width8_Ascii1_Offset1_Then_ok()
+        {
+            var data = Enumerable.Repeat((byte) 'a', 56).ToArray();
+            int columns = 3;
+            int width = 4;
+            bool offset = true;
+            bool ascii = true;
+            var expected = @"
+0000    61 61 61 61  61 61 61 61  61 61 61 61    aaaa aaaa aaaa
+000C    61 61 61 61  61 61 61 61  61 61 61 61    aaaa aaaa aaaa
+0018    61 61 61 61  61 61 61 61  61 61 61 61    aaaa aaaa aaaa
+0024    61 61 61 61  61 61 61 61  61 61 61 61    aaaa aaaa aaaa
+0030    61 61 61 61  61 61 61 61                 aaaa aaaa     ".TrimStart();
+            var result = HexDump.Format(data, width, columns, offset, ascii);
+            Assert.Equal(expected, result);
+
+            var config = HexDump.Analyse(result.AsSpan());
+            Assert.Equal(8, config.Offset);
+            Assert.Equal(37, config.Hex);
+            Assert.Equal(18, config.Ascii);
+            //Assert.Equal(1, config.NewLine);
+        }
     }
 }

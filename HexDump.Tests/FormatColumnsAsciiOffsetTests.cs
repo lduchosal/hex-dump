@@ -3,7 +3,7 @@ using Xunit;
 
 namespace HexDump.Tests
 {
-    public class HexDumpFormatWidthTest
+    public class FormatColumnsAsciiOffsetTests
     {
 
 

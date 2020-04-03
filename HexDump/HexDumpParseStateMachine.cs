@@ -76,7 +76,7 @@ namespace HexDump
             public int Offset;
             public int Hex;
             public int Ascii;
-            public int Eol;
+            public int NewLine;
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace HexDump
 
                 i += config.Hex;
                 i += config.Ascii;
-                i += config.Eol;
+                i += config.NewLine;
 
             }
 
@@ -141,125 +141,29 @@ namespace HexDump
             var len = span.Length;
             var pm = new Config
             {
-                Eol = 1,
+                NewLine = 1,
             };
             
             for (int i = 0; i < len; i++)
             {
                 if (p.CurrentState == State.Started)
                 {
-
-                    if (len < 8)
-                    {
-                        pm.Offset = 0;
-                        p.MoveNext(Command.Offset);
-                        continue;
-                    }
-
-                    int offset = 0;
-                    if (_smlookup1[span[0]] != 0xff
-                        && _smlookup2[span[0]] != 0xff
-                        && _smlookup1[span[1]] != 0xff
-                        && _smlookup2[span[1]] != 0xff
-                        && _smlookup1[span[2]] != 0xff
-                        && _smlookup2[span[2]] != 0xff
-                        && _smlookup1[span[3]] != 0xff
-                        && _smlookup2[span[3]] != 0xff
-                        && span[4] == ' '
-                        && span[5] == ' '
-                        && span[6] == ' '
-                        && span[7] == ' '
-                    )
-                    {
-                        offset = 8;
-                    }
-
-                    pm.Offset = offset;
-                    p.MoveNext(Command.Offset);
-                    i += offset;
-                    continue;
+                    i += Started(span, i, len, pm, p);
                 }
 
                 else if (p.CurrentState == State.Offset)
                 {
-                    if (i + 3 >= len)
-                    {
-                        pm.Hex = len - pm.Offset;
-                        p.MoveNext(Command.Hex);
-                        continue;
-                    }
-                    
-                    if (span[i] == ' '
-                        && span[i + 1] == ' '
-                        && span[i + 2] == ' '
-                        && span[i + 3] == ' ')
-                    {
-                        pm.Hex = i - pm.Offset;
-                        p.MoveNext(Command.Hex);
-                        continue;
-                    }
-                    
-                    if (span[i + 3] == '\n'
-                         || span[i + 3] == '\r'
-                         )
-                    {
-                        pm.Hex = i - pm.Offset + 3;
-                        p.MoveNext(Command.Hex);
-                        continue;
-                    }
-
+                    i += Offset(span, i, len, pm, p);
                 }
 
                 else if (p.CurrentState == State.Hex)
                 {
-                    
-                    if (
-                        i + 1 == len
-                    )
-                    {
-                        pm.Ascii = i - pm.Offset - pm.Hex + 1;
-                        p.MoveNext(Command.Ascii);
-                        continue;
-                    }
-
-                    
-                    if (
-                        i + 1 < len
-                        && (
-                            span[i + 1] == '\n'
-                            || span[i + 1] == '\r')
-                    )
-                    {
-                        pm.Ascii = i - pm.Offset - pm.Hex + 1;
-                        p.MoveNext(Command.Ascii);
-                        continue;
-                    }
-                    
-                    if (
-                        span[i] == '\n'
-                        || span[i] == '\r'
-                    )
-                    {
-                        pm.Ascii = i - pm.Offset - pm.Hex;
-                        p.MoveNext(Command.Ascii);
-                        continue;
-                    }
+                    i += Hex(span, i, len, pm, p);
                 }
                 
                 else if (p.CurrentState == State.Ascii)
                 {
-                    if (span[i] == '\r')
-                    {
-                        pm.Eol = 2;
-                        p.MoveNext(Command.NewLine);
-                        continue;
-                    }
-                    if (span[i] == '\n')
-                    {
-                        pm.Eol = 1;
-                        p.MoveNext(Command.NewLine);
-                        continue;
-                    }
+                    i += Ascii(span, i, len,pm, p);
                 }
 
                 else if (p.CurrentState == State.NewLine)
@@ -276,11 +180,129 @@ namespace HexDump
             return pm;
         }
 
-
-
-        public enum State
+        private static int Ascii(ReadOnlySpan<char> span, int i, int len, Config pm, Process p)
         {
-            Started,
+            if (span[i] == '\r')
+            {
+                pm.NewLine = 2;
+                p.MoveNext(Command.NewLine);
+                return 0;
+            }
+
+            if (span[i] == '\n')
+            {
+                pm.NewLine = 1;
+                p.MoveNext(Command.NewLine);
+            }
+            return 0;
+        }
+
+        private static int Hex(ReadOnlySpan<char> span, int i, int len, Config pm, Process p)
+        {
+            if (
+                i + 1 == len
+            )
+            {
+                pm.Ascii = i - pm.Offset - pm.Hex + 1;
+                p.MoveNext(Command.Ascii);
+                return 0;
+            }
+
+
+            if (
+                i + 1 < len
+                && (
+                    span[i + 1] == '\n'
+                    || span[i + 1] == '\r')
+            )
+            {
+                pm.Ascii = i - pm.Offset - pm.Hex + 1;
+                p.MoveNext(Command.Ascii);
+                return 0;
+            }
+
+            if (
+                span[i] == '\n'
+                || span[i] == '\r'
+            )
+            {
+                pm.Ascii = i - pm.Offset - pm.Hex;
+                p.MoveNext(Command.Ascii);
+                return 0;
+
+            }
+            return 0;
+
+        }
+
+        private static int Offset(ReadOnlySpan<char> span, int i, int len, Config pm, Process p)
+        {
+            if (i + 3 >= len)
+            {
+                pm.Hex = len - pm.Offset;
+                p.MoveNext(Command.Hex);
+                return 0;
+            }
+
+            if (span[i] == ' '
+                && span[i + 1] == ' '
+                && span[i + 2] == ' '
+                && span[i + 3] == ' ')
+            {
+                pm.Hex = i - pm.Offset;
+                p.MoveNext(Command.Hex);
+                return 0;
+            }
+
+            if (span[i + 3] == '\n'
+                || span[i + 3] == '\r'
+            )
+            {
+                pm.Hex = i - pm.Offset + 3;
+                p.MoveNext(Command.Hex);
+                return 0;
+            }
+            
+            return 0;
+
+        }
+        
+        private static int Started(ReadOnlySpan<char> span, int i, int len, Config pm, Process p)
+        {
+            if (len < 8)
+            {
+                pm.Offset = 0;
+                p.MoveNext(Command.Offset);
+                return 0;
+            }
+
+            int offset = 0;
+            if (_smlookup1[span[0]] != 0xff
+                && _smlookup2[span[0]] != 0xff
+                && _smlookup1[span[1]] != 0xff
+                && _smlookup2[span[1]] != 0xff
+                && _smlookup1[span[2]] != 0xff
+                && _smlookup2[span[2]] != 0xff
+                && _smlookup1[span[3]] != 0xff
+                && _smlookup2[span[3]] != 0xff
+                && span[4] == ' '
+                && span[5] == ' '
+                && span[6] == ' '
+                && span[7] == ' '
+            )
+            {
+                offset = 8;
+            }
+
+            pm.Offset = offset;
+            p.MoveNext(Command.Offset);
+            return offset;
+        }
+
+
+        public enum State : int
+        {
+            Started = 0,
             Offset,
             Hex,
             Ascii,

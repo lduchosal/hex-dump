@@ -3,7 +3,7 @@ using Xunit;
 
 namespace HexDump.Tests
 {
-    public class HexDumpFormatNeedFix
+    public class FormatSpecialCasesTests
     {
 
         
@@ -58,6 +58,44 @@ namespace HexDump.Tests
             
             var parsed = HexDump.Parse(data);
             var result2 = HexDump.Format(parsed, includeOffset: false, includeAscii: false);
+
+            Assert.Equal(data, result2);
+        }
+        
+        [Fact]
+        public void When_OneByte_NoAscii_NoOffset_Work()
+        {
+            var data = @"
+9A
+".Trim();
+            
+            var parsed = HexDump.Parse(data);
+            var result2 = HexDump.Format(parsed, 
+            includeOffset: false, 
+            includeAscii: false,
+            columnWidth: 1,
+            columnCount: 1
+            );
+
+            Assert.Equal(data, result2);
+        }
+
+
+        [Fact]
+        public void When_TwoBytes_NoAscii_NoOffset_Work()
+        {
+            var data = @"
+9A
+9A
+".Trim();
+            
+            var parsed = HexDump.Parse(data);
+            var result2 = HexDump.Format(parsed, 
+            includeOffset: false, 
+            includeAscii: false,
+            columnWidth: 1,
+            columnCount: 1
+            );
 
             Assert.Equal(data, result2);
         }
