@@ -135,5 +135,30 @@ namespace HexDump.Tests
             Assert.Equal(0, config.Ascii);
             Assert.Equal(1, config.Eol);
         }
+        
+        
+        [Fact]
+        public void When_56a_Columns1_Width8_Ascii0_Offset1_Then_ok()
+        {
+            
+            var data = @"
+0000    61 61 61 61 61 61 61 61
+0008    61 61 61 61 61 61 61 61
+0010    61 61 61 61 61 61 61 61
+0018    61 61 61 61 61 61 61 61
+0020    61 61 61 61 61 61 61 61
+0028    61 61 61 61 61 61 61 61
+0030    61 61 61 61 61 61 61 61
+".Trim();
+            
+            var config = HexDump.Analyse(data.AsSpan());
+
+            Assert.Equal(8, config.Offset);
+            Assert.Equal(23, config.Hex);
+            Assert.Equal(0, config.Ascii);
+            Assert.Equal(1, config.Eol);
+        }
+
+
     }
 }

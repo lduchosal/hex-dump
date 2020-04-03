@@ -203,7 +203,7 @@ namespace HexDump
                          || span[i + 3] == '\r'
                          )
                     {
-                        pm.Hex = i + 3;
+                        pm.Hex = i - pm.Offset + 3;
                         p.MoveNext(Command.Hex);
                         continue;
                     }

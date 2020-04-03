@@ -21,7 +21,7 @@ namespace HexDump
         /// <param name="includeOffset"></param>
         /// <param name="includeAscii"></param>
         /// <returns></returns>
-        public static byte[] ParseRegex(string dump, int columnWidth = 8, int columnCount = 2, bool includeOffset = true, bool includeAscii = true, bool compileRegex = true)
+        public static byte[] ParseRegex2(string dump, int columnWidth = 8, int columnCount = 2, bool includeOffset = true, bool includeAscii = true, bool compileRegex = true)
         {
 
             string rio = includeOffset ? "((?<offset>[0-9a-f]+)\\s+)" : "";
